@@ -10,14 +10,14 @@ export default async function postDoc(request, response) {
     const fetchResponse = await fetch(process.env.API_ENDPOINT, {
       method: "POST",
       headers: {
-        [process.env.API_KEY]: process.env.API_VALUE,
+        [process.env.API_KEY]: process.env.API_KEY_VALUE,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
     });
 
     if (fetchResponse.ok) {
-      const result = await response.json();
+      const result = await fetchResponse.json();
       return response.status(200).json(result);
     }
     return response.status(400).json("API ERROR");

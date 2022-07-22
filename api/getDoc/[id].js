@@ -9,13 +9,13 @@ export default async function getDoc(request, response) {
   try {
     const fetchResponse = await fetch(`${process.env.API_ENDPOINT}/${id}`, {
       headers: {
-        [process.env.API_KEY]: process.env.API_VALUE,
+        [process.env.API_KEY]: process.env.API_KEY_VALUE,
         "Content-Type": "application/json",
       },
     });
 
     if (fetchResponse.ok) {
-      const result = await response.json();
+      const result = await fetchResponse.json();
       return response.status(200).json(result);
     }
     return response.status(400).json("API ERROR");

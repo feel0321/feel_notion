@@ -12,7 +12,7 @@ export default async function deleteDoc(request, response) {
     });
 
     if (fetchResponse.ok) {
-      const result = await response.json();
+      const result = await fetchResponse.json();
       return response.status(200).json(result);
     }
     return response.status(400).json("API ERROR");
