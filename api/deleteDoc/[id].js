@@ -9,6 +9,10 @@ export default async function deleteDoc(request, response) {
   try {
     const fetchResponse = await fetch(`${process.env.API_ENDPOINT}/${id}`, {
       method: "DELETE",
+      headers: {
+        [process.env.API_KEY]: process.env.API_KEY_VALUE,
+        "Content-Type": "application/json",
+      },
     });
 
     if (fetchResponse.ok) {
