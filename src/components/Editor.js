@@ -81,7 +81,7 @@ export default function Editor({
   let timer = null;
   // data 저장 요청 디바운스
   // isReload에 따라서 로직 추가 수행 (sidebar 갱신)
-  const saveEditor = (isReload) => {
+  const saveEditor = () => {
     if (timer) {
       clearTimeout(timer);
     }
@@ -93,9 +93,7 @@ export default function Editor({
           text: `${id}번 문서를 수정했습니다.`,
           ok: true,
         });
-        if (isReload) {
-          FuncAppRoute();
-        }
+        FuncAppRoute();
       } catch (e) {
         displayAlert({
           text: `${id}번 문서 수정에 실패했습니다.`,
@@ -197,7 +195,7 @@ export default function Editor({
       parentElement.innerHTML = parentElement.innerHTML.replace("#&nbsp;", "");
     }
 
-    saveEditor(false);
+    saveEditor();
   });
 
   // '/제목 찾을제목'으로 생성한 a태그 클릭시 이동
