@@ -1,58 +1,60 @@
 import { $create } from "../../utils/dom.js";
 import Button from "./Button.js";
 import SideBarChildren from "./SideBarChildren.js";
-// import { request } from "../api/api.js";
 import { postDoc } from "../request/index.js";
 
-export default function SideBar({
-  $target,
-  initialState,
-  onDocumentClick,
-  displayAlert,
-}) {
-  const $sideBarContainer = $create("div");
-  $target.appendChild($sideBarContainer);
-  $sideBarContainer.classList.add("side-bar-container");
+export default class SideBar {
+  constructor({ $target, initialState, onDocumentClick, displayAlert }) {
+    const $sideBarContainer = $create("div");
+    $sideBarContainer.classList.add("side-bar-container");
 
-  const $sideBarHome = $create("div");
-  $sideBarHome.className = "document";
-  $sideBarContainer.appendChild($sideBarHome);
-  $sideBarHome.textContent = "home ";
+    const $sideBarHome = $create("div");
+    $sideBarHome.className = "document";
+    $sideBarContainer.appendChild($sideBarHome);
+    $sideBarHome.textContent = "home ";
 
-  $sideBarHome.addEventListener("click", () => {
-    history.pushState(null, null, "/");
-    onDocumentClick();
-  });
+    this.state = initialState;
+    this.onDocumentClick = onDocumentClick;
+    this.displayAlert = displayAlert;
+    this.$sideBarHome = $sideBarHome;
+    this.setEvent();
+    this.render();
+    $target.appendChild($sideBarContainer);
 
-  this.render = () => {
+    const sideBarContent = new SideBarChildren({
+      $target: $sideBarContainer,
+      initialState,
+      onDocumentClick,
+      displayAlert,
+    });
+    this.sideBarContent = sideBarContent;
+  }
+
+  setEvent() {
+    this.$sideBarHome.addEventListener("click", () => {
+      history.pushState(null, null, "/");
+      this.onDocumentClick();
+    });
+  }
+
+  setState(nextState) {
+    this.sideBarContent.setState(nextState);
+  }
+
+  render() {
     new Button({
-      $target: $sideBarHome,
+      $target: this.$sideBarHome,
       initText: "+",
       onClick: async () => {
         try {
           const data = await postDoc("새 글");
-          displayAlert({ text: "새 글을 작성합니다.", ok: true });
+          this.displayAlert({ text: "새 글을 작성합니다.", ok: true });
           history.pushState(null, null, `/documents/${data.id}`);
-          onDocumentClick();
+          this.onDocumentClick();
         } catch (e) {
-          displayAlert({ text: "새 글 작성에 실패했습니다.", ok: false });
+          this.displayAlert({ text: "새 글 작성에 실패했습니다.", ok: false });
         }
       },
     });
-  };
-
-  this.render();
-
-  const sideBarContent = new SideBarChildren({
-    $target: $sideBarContainer,
-    initialState,
-    onDocumentClick,
-    displayAlert,
-  });
-
-  this.state = initialState;
-
-  this.setState = (nextState) => {
-    sideBarContent.setState(nextState);
-  };
+  }
 }
