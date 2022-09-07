@@ -16,6 +16,18 @@ export default class Editor {
     const $contentContainer = $create("div");
     $contentContainer.classList.add("editor-content-container");
 
+    this.timer = null;
+    this.state = initialState;
+    this.FuncAppRoute = FuncAppRoute;
+    this.displayAlert = displayAlert;
+    this.findTitle = findTitle;
+    this.$input = $input;
+    this.$contentContainer = $contentContainer;
+    this.setEvent();
+    this.render();
+    $target.appendChild($input);
+    $target.appendChild($contentContainer);
+
     const editorChildren = new EditorChildren({
       $target,
       initialState: initialState.info.documents,
@@ -24,19 +36,7 @@ export default class Editor {
         findTitle.setState({ nextState: null });
       },
     });
-
-    this.timer = null;
-    this.state = initialState;
-    this.FuncAppRoute = FuncAppRoute;
-    this.displayAlert = displayAlert;
-    this.findTitle = findTitle;
-    this.$input = $input;
-    this.$contentContainer = $contentContainer;
     this.editorChildren = editorChildren;
-    this.setEvent();
-    this.render();
-    $target.appendChild($input);
-    $target.appendChild($contentContainer);
   }
 
   // data 저장 요청 디바운스
